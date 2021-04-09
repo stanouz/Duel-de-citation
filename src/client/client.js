@@ -1,8 +1,8 @@
 /* ******************************************************************
  * Constantes de configuration
  */
-const apiKey = "69617e9b-19db-4bf7-a33f-18d4e90ccab7";
-const serverUrl = "http://localhost:3000";
+const apiKey = "0e2c739a-0c73-4d13-bf99-1997b8dc94b7";
+const serverUrl = "https://lifap5.univ-lyon1.fr";
 
 /* ******************************************************************
  * Gestion des tabs "Voter" et "Toutes les citations"
@@ -71,8 +71,8 @@ function registerTabClick(etatCourant) {
  * Fait une requête GET authentifiée sur /whoami
  * @returns une promesse du login utilisateur ou du message d'erreur
  */
-function fetchWhoami() {
-  return fetch(serverUrl + "/whoami", { headers: { "x-api-key": apiKey } })
+function fetchWhoami(key) {
+  return fetch(serverUrl + "/whoami", { headers: { "x-api-key": key } })
     .then((response) => response.json())
     .then((jsonData) => {
       if (jsonData.status && Number(jsonData.status) != 200) {
@@ -88,12 +88,16 @@ function fetchWhoami() {
  * la modale d'affichage de l'utilisateur.
  * @returns Une promesse de mise à jour
  */
-function lanceWhoamiEtInsereLogin() {
-  return fetchWhoami().then((data) => {
+function lanceWhoamiEtInsereLogin(key) {
+  return fetchWhoami(key).then((data) => {
     const elt = document.getElementById("elt-affichage-login");
     const ok = data.err === undefined;
     if (!ok) {
-      elt.innerHTML = `<span class="is-error">${data.err}</span>`;
+      elt.innerHTML = `<article class="message is-danger">
+                        <div class="message-body">
+                          <strong>La clé d'API entrée n'est pas valide.</strong>
+                        </div>
+                      </article>`
     } else {
       elt.innerHTML = `Bonjour ${data.login}.`;
     }
@@ -110,7 +114,7 @@ function majModalLogin(etatCourant) {
   const modalClasses = document.getElementById("mdl-login").classList;
   if (etatCourant.loginModal) {
     modalClasses.add("is-active");
-    lanceWhoamiEtInsereLogin();
+    //lanceWhoamiEtInsereLogin();
   } else {
     modalClasses.remove("is-active");
   }
@@ -146,7 +150,10 @@ function registerLoginModalClick(etatCourant) {
     clickFermeModalLogin(etatCourant);
   document.getElementById("btn-open-login-modal").onclick = () =>
     clickOuvreModalLogin(etatCourant);
-}
+  document.getElementById("btn-connect-API").onclick = () =>
+    lanceWhoamiEtInsereLogin(document.getElementById("api_key").value);
+
+  }
 
 /* ******************************************************************
  * Initialisation de la page et fonction de mise à jour

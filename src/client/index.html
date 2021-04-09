@@ -2,6 +2,7 @@
   <head>
     <title>Duels de citations</title>
     <link rel="stylesheet" href="bulma.min.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
@@ -132,7 +133,24 @@
         </header>
         <section class="modal-card-body">
           <p id="elt-affichage-login">
-            Ici, il faudrait afficher le login de l'utilisateur.
+            <div class="enter-api">
+              <div class="field">
+                <p class="control has-icons-left">
+                  <input class="input" type="password" id="api_key" 
+                    placeholder="Clé API" minlength="34" required>
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-lock"></i>
+                    </span>
+                </p>
+              </div>
+              <div class="field">
+                <p class="control">
+                  <button id="btn-connect-API" class="button is-success">
+                    Se connecter
+                  </button>
+                </p>
+              </div>
+            </div>
           </p>
         </section>
         <footer class="modal-card-foot" style="justify-content: flex-end">
