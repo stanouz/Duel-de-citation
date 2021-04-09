@@ -6,4 +6,3 @@
 - [Backend doc](https://lifap5.univ-lyon1.fr/api-docs/)
 - [Backend files](https://forge.univ-lyon1.fr/inf2026l-lifap5/lifap5-backend-2021p)
 - [Bulma doc](https://bulma.io/documentation/)
-- 
