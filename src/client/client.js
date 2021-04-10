@@ -104,6 +104,7 @@ function lanceWhoamiEtInsereLogin(etatCourant, key) {
         elt.innerHTML = `Bonjour ${data.login}.`;
       }
       majAPIErrorMessage(etatCourant);
+      majEnterAPI(etatCourant);
       return ok;
     });
   }
@@ -131,10 +132,22 @@ function majModalLogin(etatCourant) {
  */
 function majAPIErrorMessage(etatCourant) {
   const errorMessage = document.getElementById("api-error-message").classList;
-  if (etatCourant.isConnected) {
+  if (etatCourant.isConnected || !etatCourant.errorAPI) {
     errorMessage.add("is-hidden");
   } else if(etatCourant.errorAPI) {
     errorMessage.remove("is-hidden");
+  }
+}
+
+function majEnterAPI(etatCourant) {
+  const enterAPI = document.getElementById("enter-api").classList;
+  const disconnectBtn = document.getElementById("disconnect-btn").classList;
+  if (etatCourant.isConnected) {
+    enterAPI.add("is-hidden");
+    disconnectBtn.remove("is-hidden");
+  }else{
+    enterAPI.remove("is-hidden");
+    disconnectBtn.add("is-hidden");
   }
 }
 
@@ -144,6 +157,16 @@ function majAPIErrorMessage(etatCourant) {
  */
 function clickFermeModalLogin(etatCourant) {
   etatCourant.loginModal = false;
+  document.getElementById("api_key").value = "";
+  etatCourant.errorAPI = false;
+  majPage(etatCourant);
+}
+
+function clickDisconnect(etatCourant) {
+
+  etatCourant.isConnected = false;
+  document.getElementById("api_key").value = "";
+  const elt = document.getElementById("elt-affichage-login").innerHTML = "";
   majPage(etatCourant);
 }
 
@@ -170,6 +193,8 @@ function registerLoginModalClick(etatCourant) {
     clickOuvreModalLogin(etatCourant);
   document.getElementById("btn-connect-API").onclick = () =>
     lanceWhoamiEtInsereLogin(etatCourant, document.getElementById("api_key").value);
+  document.getElementById("disconnect-btn").onclick = () =>
+    clickDisconnect(etatCourant);
 
   }
 
@@ -190,6 +215,7 @@ function majPage(etatCourant) {
   majAPIErrorMessage(etatCourant);
   registerTabClick(etatCourant);
   registerLoginModalClick(etatCourant);
+  majEnterAPI(etatCourant);
 }
 
 /**
@@ -207,6 +233,7 @@ function initClientCitations() {
   };
   majPage(etatInitial);
 }
+
 
 // Appel de la fonction init_client_duels au après chargement de la page
 document.addEventListener("DOMContentLoaded", () => {

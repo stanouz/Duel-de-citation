@@ -11,7 +11,7 @@
         <div class="navbar-item">
           <div class="buttons">
             <a id="btn-open-login-modal" class="button is-light">
-              Utilisateur
+              Connexion
             </a>
           </div>
         </div>
@@ -120,11 +120,11 @@
         </table>
       </div>
     </section>
-    <div id="mdl-login" class="modal is-active">
+    <div id="mdl-login" class="modal">
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Utilisateur</p>
+          <p class="modal-card-title">Connexion utilisateur</p>
           <button
             id="btn-close-login-modal1"
             class="delete"
@@ -138,7 +138,7 @@
                 <strong>La clé d'API entrée n'est pas valide.</strong>
               </div>
             </article>
-            <div class="enter-api">
+            <div id="enter-api">
               <div class="field">
                 <p class="control has-icons-left">
                   <input class="input" type="password" id="api_key" 
@@ -157,6 +157,9 @@
               </div>
             </div>
           </p>
+          <button class="button is-danger is-pulled-right is-hidden" id="disconnect-btn">
+            Se déconnecter
+          </button>
         </section>
         <footer class="modal-card-foot" style="justify-content: flex-end">
           <button id="btn-close-login-modal2" class="button">Fermer</button>
