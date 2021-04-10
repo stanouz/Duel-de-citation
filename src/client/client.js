@@ -69,6 +69,7 @@ function registerTabClick(etatCourant) {
 
 /**
  * Fait une requête GET authentifiée sur /whoami
+ * @param {Clé} key La clé API entrée par l'utilisateur
  * @returns une promesse du login utilisateur ou du message d'erreur
  */
 function fetchWhoami(key) {
@@ -86,23 +87,26 @@ function fetchWhoami(key) {
 /**
  * Fait une requête sur le serveur et insère le login dans
  * la modale d'affichage de l'utilisateur.
+ * @param {Clé} key La clé API entrée par l'utilisateur
  * @returns Une promesse de mise à jour
  */
-function lanceWhoamiEtInsereLogin(key) {
-  return fetchWhoami(key).then((data) => {
-    const elt = document.getElementById("elt-affichage-login");
-    const ok = data.err === undefined;
-    if (!ok) {
-      elt.innerHTML = `<article class="message is-danger">
-                        <div class="message-body">
-                          <strong>La clé d'API entrée n'est pas valide.</strong>
-                        </div>
-                      </article>`
-    } else {
-      elt.innerHTML = `Bonjour ${data.login}.`;
-    }
-    return ok;
-  });
+function lanceWhoamiEtInsereLogin(etatCourant, key) {
+  if (!etatCourant.isConnected) {
+    return fetchWhoami(key).then((data) => {
+      const elt = document.getElementById("elt-affichage-login");
+      const ok = data.err === undefined;
+      if (!ok) {
+        etatCourant.isConnected = false;
+        etatCourant.errorAPI = true;
+      } else {
+        etatCourant.isConnected = true;
+        etatCourant.errorAPI = false;
+        elt.innerHTML = `Bonjour ${data.login}.`;
+      }
+      majAPIErrorMessage(etatCourant);
+      return ok;
+    });
+  }
 }
 
 /**
@@ -114,9 +118,23 @@ function majModalLogin(etatCourant) {
   const modalClasses = document.getElementById("mdl-login").classList;
   if (etatCourant.loginModal) {
     modalClasses.add("is-active");
-    //lanceWhoamiEtInsereLogin();
   } else {
     modalClasses.remove("is-active");
+  }
+}
+
+/**
+ * Affiche ou masque la fenêtre le message d'erreur de connexion avec
+ * la clé d'API dans la fenêtre modale de login
+ *
+ * @param {Etat} etatCourant l'état courant
+ */
+function majAPIErrorMessage(etatCourant) {
+  const errorMessage = document.getElementById("api-error-message").classList;
+  if (etatCourant.isConnected) {
+    errorMessage.add("is-hidden");
+  } else if(etatCourant.errorAPI) {
+    errorMessage.remove("is-hidden");
   }
 }
 
@@ -151,7 +169,7 @@ function registerLoginModalClick(etatCourant) {
   document.getElementById("btn-open-login-modal").onclick = () =>
     clickOuvreModalLogin(etatCourant);
   document.getElementById("btn-connect-API").onclick = () =>
-    lanceWhoamiEtInsereLogin(document.getElementById("api_key").value);
+    lanceWhoamiEtInsereLogin(etatCourant, document.getElementById("api_key").value);
 
   }
 
@@ -169,6 +187,7 @@ function majPage(etatCourant) {
   console.log("CALL majPage");
   majTab(etatCourant);
   majModalLogin(etatCourant);
+  majAPIErrorMessage(etatCourant);
   registerTabClick(etatCourant);
   registerLoginModalClick(etatCourant);
 }
@@ -183,6 +202,8 @@ function initClientCitations() {
   const etatInitial = {
     tab: "duel",
     loginModal: false,
+    isConnected: false,
+    errorAPI: false,
   };
   majPage(etatInitial);
 }

@@ -133,6 +133,11 @@
         </header>
         <section class="modal-card-body">
           <p id="elt-affichage-login">
+            <article class="message is-danger is-hidden" id="api-error-message">
+              <div class="message-body">
+                <strong>La clé d'API entrée n'est pas valide.</strong>
+              </div>
+            </article>
             <div class="enter-api">
               <div class="field">
                 <p class="control has-icons-left">
@@ -143,7 +148,7 @@
                     </span>
                 </p>
               </div>
-              <div class="field">
+              <div class="field is-pulled-right">
                 <p class="control">
                   <button id="btn-connect-API" class="button is-success">
                     Se connecter
