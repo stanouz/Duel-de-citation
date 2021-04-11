@@ -5,7 +5,7 @@
 const serverUrl = "https://lifap5.univ-lyon1.fr";
 
 /* ******************************************************************
- * Gestion des tabs "Voter" et "Toutes les citations"
+ * Gestion des tabs "Voter" et "Toutes les citations"  
  ******************************************************************** */
 
 /**
@@ -32,6 +32,51 @@ function majTab(etatCourant) {
     tDuel.classList.remove("is-active");
   }
 }
+
+/**
+ * Fait une requête GET authentifiée sur /citations
+ * Entre les données récupérées dans data dans etatCourant
+ * @param {Etat} etatCourant l'état courant
+ */
+function fetchCitations() {
+  return fetch(serverUrl + "/citations")
+    .then(res => {return res.text()})
+    .then((textData) => {
+      return JSON.parse(textData);
+    })
+    .catch((erreur) => ({ err: erreur }));
+}
+
+
+function dataToTab(data) {
+  return data.map((data, index) => {
+    console.log(data)
+    return `<tr id="${data._id}"><th>${index+1}</th><td>${data.character}</td>
+  <td>${data.quote}</td><td><button class="fas fa-info-circle" onclick=
+  "modalOpen('info${data._id}')"></button></td></tr>
+  <div id="info${data._id}" class="modal"><div class="modal-background"
+   onclick="modalClose('info${data._id}');"></div>
+          <div class="modal-content box">
+          <button class="modal-close is-large" aria-label="close" 
+          onclick="modalClose('info${data._id}');"></button>
+          <div style="float:left;"><img class="mx-2" src="${data.image}" 
+          width="100px"></div><div style="line-height:50px;"><p><b>Citation : 
+          </b> 
+          ${data.quote}</p><p><b>Personnage : </b>${data.character}</p><p><b>
+          Source : </b> ${data.origin}</p></div></div></div>`;
+  }).join("\n");
+}
+
+
+function modalOpen(element)
+{
+    document.getElementById(element).classList.add('is-active');
+}
+function modalClose(element)
+{
+    document.getElementById(element).classList.remove('is-active');
+}
+
 
 /**
  * Mets au besoin à jour l'état courant lors d'un click sur un tab.
@@ -64,7 +109,7 @@ function registerTabClick(etatCourant) {
 
 /* ******************************************************************
  * Gestion de la boîte de dialogue (a.k.a. modal) d'affichage de
- * l'utilisateur.
+ * l'utilisateur ainsi que de la connexion/deconnexion
  * ****************************************************************** */
 
 /**
@@ -255,6 +300,9 @@ function initClientCitations() {
     key: 0,
     login: "",
   };
+  fetchCitations().then(data => {
+    document.getElementById("tab-body-classement").innerHTML = dataToTab(data);
+  });
   majPage(etatInitial);
 }
 
