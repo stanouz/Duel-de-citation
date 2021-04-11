@@ -5,24 +5,36 @@
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </head>
+
   <body>
+    <!-- Barre de navigation -->
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-end">
         <div class="navbar-item">
+            <div id="connected-as" class="is-hidden mx-2">
+              Connecté en tant que 
+            </div>
           <div class="buttons">
-            <a id="btn-open-login-modal" class="button is-light">
+            <a id="btn-open-login-modal" class="button is-success">
               Connexion
+            </a>
+            <a id="btn-disconnect" class="button is-danger is-hidden">
+              Deconnexion
             </a>
           </div>
         </div>
       </div>
     </nav>
+
+    <!-- Section titre -->
     <section class="hero is-primary">
       <div class="hero-body">
         <h1 class="title">Duels de citations</h1>
         <p class="subtitle">Quelle est votre citation favorite ?</p>
       </div>
     </section>
+
+    <!-- Menu onglets -->
     <section class="section">
       <div class="tabs is-centered">
         <ul>
@@ -32,6 +44,8 @@
           <li id="tab-tout"><a>Toutes les citations</a></li>
         </ul>
       </div>
+
+      <!-- Setion Duel -->
       <div class="columns" id="div-duel">
         <div class="column">
           <div class="card">
@@ -82,12 +96,15 @@
             </div>
             <div class="card-content">
               <div class="columns is-centered">
-                <p class="button is-info">Voter pour la citation de droite !</p>
+                <p class="button is-info">
+                  Voter pour la citation de droite !</p>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Onglet "Toutes les citations" -->
       <div id="div-tout">
         <table class="table">
           <thead>
@@ -120,6 +137,8 @@
         </table>
       </div>
     </section>
+
+    <!-- Fenetre modale de connexion -->
     <div id="mdl-login" class="modal">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -133,7 +152,8 @@
         </header>
         <section class="modal-card-body">
           <p id="elt-affichage-login">
-            <article class="message is-danger is-hidden" id="api-error-message">
+            <article class="message is-danger is-hidden" 
+            id="api-error-message">
               <div class="message-body">
                 <strong>La clé d'API entrée n'est pas valide.</strong>
               </div>
@@ -157,15 +177,13 @@
               </div>
             </div>
           </p>
-          <button class="button is-danger is-pulled-right is-hidden" id="disconnect-btn">
-            Se déconnecter
-          </button>
         </section>
         <footer class="modal-card-foot" style="justify-content: flex-end">
           <button id="btn-close-login-modal2" class="button">Fermer</button>
         </footer>
       </div>
     </div>
+
     <script src="client.js"></script>
   </body>
 </html>

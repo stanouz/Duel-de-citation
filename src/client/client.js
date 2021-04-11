@@ -93,7 +93,6 @@ function fetchWhoami(key) {
 function lanceWhoamiEtInsereLogin(etatCourant, key) {
   if (!etatCourant.isConnected) {
     return fetchWhoami(key).then((data) => {
-      const elt = document.getElementById("elt-affichage-login");
       const ok = data.err === undefined;
       if (!ok) {
         etatCourant.key = key;
@@ -102,7 +101,8 @@ function lanceWhoamiEtInsereLogin(etatCourant, key) {
       } else {
         etatCourant.isConnected = true;
         etatCourant.errorAPI = false;
-        elt.innerHTML = `Bonjour ${data.login}.`;
+        etatCourant.login = data.login;
+        clickFermeModalLogin(etatCourant);
       }
       majAPIErrorMessage(etatCourant);
       majEnterAPI(etatCourant);
@@ -135,20 +135,33 @@ function majAPIErrorMessage(etatCourant) {
   const errorMessage = document.getElementById("api-error-message").classList;
   if (etatCourant.isConnected || !etatCourant.errorAPI) {
     errorMessage.add("is-hidden");
-  } else if(etatCourant.errorAPI) {
+  } else if (etatCourant.errorAPI) {
     errorMessage.remove("is-hidden");
   }
 }
 
+/**
+ * Effectue les actions nécessaire sur l'affichage lorsque de la 
+ * connexion/deconnexion
+ * @param {Etat} etatCourant 
+ */
 function majEnterAPI(etatCourant) {
   const enterAPI = document.getElementById("enter-api").classList;
-  const disconnectBtn = document.getElementById("disconnect-btn").classList;
+  const connectBtn = document.getElementById("btn-open-login-modal").classList;
+  const disconnectBtn = document.getElementById("btn-disconnect").classList;
+  const connectedAs = document.getElementById("connected-as");
   if (etatCourant.isConnected) {
     enterAPI.add("is-hidden");
+    connectBtn.add("is-hidden")
     disconnectBtn.remove("is-hidden");
-  }else{
+    connectedAs.classList.remove("is-hidden");
+    connectedAs.innerHTML = `Connecté en tant que ${etatCourant.login}. `;
+  } else {
     enterAPI.remove("is-hidden");
+    connectBtn.remove("is-hidden");
     disconnectBtn.add("is-hidden");
+    connectedAs.classList.add("is-hidden");
+    connectedAs.innerHTML = "";
   }
 }
 
@@ -163,12 +176,18 @@ function clickFermeModalLogin(etatCourant) {
   majPage(etatCourant);
 }
 
+/**
+ * Effectue les actions nécessaire lors de la déconnexion
+ * @param {Etat} etatCourant 
+ */
 function clickDisconnect(etatCourant) {
 
   etatCourant.isConnected = false;
+  document.getElementById("btn-disconnect").classList.add("is-hidden");
   document.getElementById("api_key").value = "";
-  const elt = document.getElementById("elt-affichage-login").innerHTML = "";
+  document.getElementById("elt-affichage-login").innerHTML = "";
   etatCourant.key = 0;
+  etatCourant.login = "";
   majPage(etatCourant);
 }
 
@@ -194,11 +213,12 @@ function registerLoginModalClick(etatCourant) {
   document.getElementById("btn-open-login-modal").onclick = () =>
     clickOuvreModalLogin(etatCourant);
   document.getElementById("btn-connect-API").onclick = () =>
-    lanceWhoamiEtInsereLogin(etatCourant, document.getElementById("api_key").value);
-  document.getElementById("disconnect-btn").onclick = () =>
+    lanceWhoamiEtInsereLogin(etatCourant,
+      document.getElementById("api_key").value);
+  document.getElementById("btn-disconnect").onclick = () =>
     clickDisconnect(etatCourant);
 
-  }
+}
 
 /* ******************************************************************
  * Initialisation de la page et fonction de mise à jour
@@ -233,6 +253,7 @@ function initClientCitations() {
     isConnected: false,
     errorAPI: false,
     key: 0,
+    login: "",
   };
   majPage(etatInitial);
 }
