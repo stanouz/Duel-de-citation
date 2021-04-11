@@ -18,6 +18,9 @@
             <a id="btn-open-login-modal" class="button is-success">
               Connexion
             </a>
+            <a id="btn-add-quote" class="button is-primary is-hidden">
+              Ajouter une citation
+            </a>
             <a id="btn-disconnect" class="button is-danger is-hidden">
               Deconnexion
             </a>
@@ -135,17 +138,20 @@
         </header>
         <section class="modal-card-body">
           <p id="elt-affichage-login">
+
             <article class="message is-danger is-hidden" 
             id="api-error-message">
               <div class="message-body">
                 <strong>La clé d'API entrée n'est pas valide.</strong>
               </div>
             </article>
+
             <div id="enter-api">
               <div class="field">
+                <label class="label required">Clé API</label>
                 <p class="control has-icons-left">
                   <input class="input" type="password" id="api_key" 
-                    placeholder="Clé API">
+                    placeholder="Entrer la clé API">
                     <span class="icon is-small is-left">
                       <i class="fas fa-lock"></i>
                     </span>
@@ -167,6 +173,84 @@
       </div>
     </div>
 
+    <!-- Fenetre modale ajout citation-->
+
+    <div id="addQuoteModal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Ajouter une citation</p>
+          <button class="delete" id="btn-close-add-quote1" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+
+          <div class="field">
+
+              <label class="label required">Citation</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="Entrer la citation" 
+              rows="2"></textarea>              
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label required">Personnage</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Entrer le personnage de la citation">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label required">Source</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Entrer la source de la citation">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Image</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Entrer le lien de l'image du personnage">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Orientation du personnage sur l'image</label>
+            <div class="control">
+              <label class="radio">
+                <input type="radio" name="question">
+                Gauche
+              </label>
+              <label class="radio">
+                <input type="radio" name="question">
+                Droite
+              </label>
+            </div>
+          </div>
+
+          <article class="message is-danger is-hidden" 
+            id="api-error-message">
+              <div class="message-body">
+                <strong>Tous les champs obligatoires n'ont pas été saisis.</strong>
+              </div>
+            </article>
+          <div class="field is-pulled-right">
+            <button class="button is-success">Ajouter</button>
+          </div>
+        </section>
+        <footer class="modal-card-foot" style="justify-content: flex-end">
+          <button id="btn-close-add-quote2" class="button">Fermer</button>
+        </footer>
+      </div>
+    </div>
+
     <script src="client.js"></script>
+
+    <style>
+      .required:after {
+        content:" *";
+        color: red;
+      }
+    </style>
   </body>
 </html>

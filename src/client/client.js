@@ -50,15 +50,14 @@ function fetchCitations() {
 
 function dataToTab(data) {
   return data.map((data, index) => {
-    console.log(data)
     return `<tr id="${data._id}"><th>${index+1}</th><td>${data.character}</td>
   <td>${data.quote}</td><td><button class="fas fa-info-circle" onclick=
-  "modalOpen('info${data._id}')"></button></td></tr>
+  "ouvrirModale('info${data._id}')"></button></td></tr>
   <div id="info${data._id}" class="modal"><div class="modal-background"
-   onclick="modalClose('info${data._id}');"></div>
+   onclick="fermerModale('info${data._id}');"></div>
           <div class="modal-content box">
           <button class="modal-close is-large" aria-label="close" 
-          onclick="modalClose('info${data._id}');"></button>
+          onclick="fermerModale('info${data._id}');"></button>
           <div style="float:left;"><img class="mx-2" src="${data.image}" 
           width="100px"></div><div style="line-height:50px;"><p><b>Citation : 
           </b> 
@@ -68,11 +67,11 @@ function dataToTab(data) {
 }
 
 
-function modalOpen(element)
+function ouvrirModale(element)
 {
     document.getElementById(element).classList.add('is-active');
 }
-function modalClose(element)
+function fermerModale(element)
 {
     document.getElementById(element).classList.remove('is-active');
 }
@@ -106,6 +105,30 @@ function registerTabClick(etatCourant) {
   document.getElementById("tab-tout").onclick = () =>
     clickTab("tout", etatCourant);
 }
+
+/* ******************************************************************
+ * Gestion de la boîte de dialogue (a.k.a. modal) d'ajout de citation
+ * ****************************************************************** */
+
+function openAddQuote(etatCourant) {
+  etatCourant.addQuoteModal = true;
+  majPage(etatCourant);
+}
+
+function closeAddQuote(etatCourant) {
+  etatCourant.addQuoteModal = false;
+  majPage(etatCourant);
+}
+
+function majAddQuoteModal(etatCourant) {
+  const modalClasses = document.getElementById("addQuoteModal").classList;
+  if (etatCourant.addQuoteModal) {
+    modalClasses.add("is-active");
+  } else {
+    modalClasses.remove("is-active");
+  }
+}
+
 
 /* ******************************************************************
  * Gestion de la boîte de dialogue (a.k.a. modal) d'affichage de
@@ -195,18 +218,21 @@ function majEnterAPI(etatCourant) {
   const connectBtn = document.getElementById("btn-open-login-modal").classList;
   const disconnectBtn = document.getElementById("btn-disconnect").classList;
   const connectedAs = document.getElementById("connected-as");
+  const AddQuoteBtn = document.getElementById("btn-add-quote").classList;
   if (etatCourant.isConnected) {
     enterAPI.add("is-hidden");
     connectBtn.add("is-hidden")
     disconnectBtn.remove("is-hidden");
     connectedAs.classList.remove("is-hidden");
     connectedAs.innerHTML = `Connecté en tant que ${etatCourant.login}. `;
+    AddQuoteBtn.remove("is-hidden");
   } else {
     enterAPI.remove("is-hidden");
     connectBtn.remove("is-hidden");
     disconnectBtn.add("is-hidden");
     connectedAs.classList.add("is-hidden");
     connectedAs.innerHTML = "";
+    AddQuoteBtn.add("is-hidden");
   }
 }
 
@@ -262,6 +288,12 @@ function registerLoginModalClick(etatCourant) {
       document.getElementById("api_key").value);
   document.getElementById("btn-disconnect").onclick = () =>
     clickDisconnect(etatCourant);
+  document.getElementById("btn-add-quote").onclick = () =>
+      openAddQuote(etatCourant);
+  document.getElementById("btn-close-add-quote1").onclick = () =>
+      closeAddQuote(etatCourant);
+    document.getElementById("btn-close-add-quote2").onclick = () =>
+      closeAddQuote(etatCourant);
 
 }
 
@@ -283,6 +315,7 @@ function majPage(etatCourant) {
   registerTabClick(etatCourant);
   registerLoginModalClick(etatCourant);
   majEnterAPI(etatCourant);
+  majAddQuoteModal(etatCourant);
 }
 
 /**
@@ -295,6 +328,7 @@ function initClientCitations() {
   const etatInitial = {
     tab: "duel",
     loginModal: false,
+    addQuoteModal: false,
     isConnected: false,
     errorAPI: false,
     key: 0,
