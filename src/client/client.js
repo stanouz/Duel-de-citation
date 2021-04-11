@@ -1,7 +1,7 @@
 /* ******************************************************************
  * Constantes de configuration
  */
-const apiKey = "0e2c739a-0c73-4d13-bf99-1997b8dc94b7";
+//const apiKey = "0e2c739a-0c73-4d13-bf99-1997b8dc94b7";
 const serverUrl = "https://lifap5.univ-lyon1.fr";
 
 /* ******************************************************************
@@ -96,6 +96,7 @@ function lanceWhoamiEtInsereLogin(etatCourant, key) {
       const elt = document.getElementById("elt-affichage-login");
       const ok = data.err === undefined;
       if (!ok) {
+        etatCourant.key = key;
         etatCourant.isConnected = false;
         etatCourant.errorAPI = true;
       } else {
@@ -167,6 +168,7 @@ function clickDisconnect(etatCourant) {
   etatCourant.isConnected = false;
   document.getElementById("api_key").value = "";
   const elt = document.getElementById("elt-affichage-login").innerHTML = "";
+  etatCourant.key = 0;
   majPage(etatCourant);
 }
 
@@ -230,6 +232,7 @@ function initClientCitations() {
     loginModal: false,
     isConnected: false,
     errorAPI: false,
+    key: 0,
   };
   majPage(etatInitial);
 }
