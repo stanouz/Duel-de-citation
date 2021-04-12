@@ -302,6 +302,13 @@ function registerLoginModalClick(etatCourant) {
  * 
  * ****************************************************************** */
 
+/**
+ * Renvoie un entier aléatoire entre 0 et max
+ * et avec l'entier forbidenNb interdit
+ *
+ * @param {Entier} max le nombre max
+ * @param {Entier} forbidenNb le nombre interdit
+ */
 function RandomForbiden(max, forbidenNb){
   const nb = Math.floor(Math.random()*max);
   if(nb==forbidenNb) return RandomForbiden(max, forbidenNb);
@@ -309,21 +316,31 @@ function RandomForbiden(max, forbidenNb){
   return nb;
 }
 
-function RandomCitation(data){
+/**
+ * Renvoie un tableau de 2 citations parmis 
+ * toutes les citations
+ *
+ * @param {Array} data tableau d'objet contenant les sitations
+ */
+function RandomQuotes(data){
   const random = RandomForbiden(data.length, -1);
   return [data[random], 
           data[RandomForbiden(data.length, random)]];
 }
 
-function DisplayCitation(citations){
+/**
+ * Affiche le duel de 2 sitation
+ * en gérant l'orientation des images
+ *
+ * @param {Array} citations tableau de 2 objets citations
+ */
+function DisplayQuote(citations){
   citations.map((citation, index) => {
   document.getElementById("quote"+(index+1)).innerHTML = citation.quote;
-    
   document.getElementById("subtitle"+(index+1)).innerHTML = 
     citation.character + " dans "+citation.origin;
 
   document.getElementById("img"+(index+1)).src = citation.image;
-      
   if(index==0 && citation.characterDirection=="Right"){
     document.getElementById("img1").style = "transform: scaleX(-1);";
   }
@@ -375,8 +392,8 @@ function initClientCitations() {
     document.getElementById("tab-body-classement").innerHTML = dataToTab(data);
   });
   
-  fetchCitations().then(data => RandomCitation(data))
-    .then(citation => DisplayCitation(citation));
+  fetchCitations().then(data => RandomQuotes(data))
+    .then(citation => DisplayQuote(citation));
 
   majPage(etatInitial);
 }
