@@ -188,7 +188,7 @@
 
               <label class="label required">Citation</label>
             <div class="control">
-              <textarea class="textarea" placeholder="Entrer la citation" 
+              <textarea id="add-quote-text" class="textarea" placeholder="Entrer la citation" 
               rows="2"></textarea>              
             </div>
           </div>
@@ -196,21 +196,21 @@
           <div class="field">
             <label class="label required">Personnage</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Entrer le personnage de la citation">
+              <input id="add-character-text" class="input" type="text" placeholder="Entrer le personnage de la citation">
             </div>
           </div>
 
           <div class="field">
             <label class="label required">Source</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Entrer la source de la citation">
+              <input id="add-source-text" class="input" type="text" placeholder="Entrer la source de la citation">
             </div>
           </div>
 
           <div class="field">
             <label class="label">Image</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Entrer le lien de l'image du personnage">
+              <input id="add-image-link" class="input" type="text" placeholder="Entrer le lien de l'image du personnage">
             </div>
           </div>
 
@@ -218,26 +218,34 @@
             <label class="label">Orientation du personnage sur l'image</label>
             <div class="control">
               <label class="radio">
-                <input type="radio" name="question">
+                <input type="radio" id="add-left-radio" name="question">
                 Gauche
               </label>
               <label class="radio">
-                <input type="radio" name="question">
+                <input type="radio" id="add-right-radio" name="question">
                 Droite
               </label>
             </div>
           </div>
 
           <article class="message is-danger is-hidden" 
-            id="api-error-message">
+            id="add-quote-error-message">
               <div class="message-body">
                 <strong>Tous les champs obligatoires n'ont pas été saisis.</strong>
               </div>
             </article>
-          <div class="field is-pulled-right">
-            <button class="button is-success">Ajouter</button>
+
+            <article class="message is-success is-hidden" 
+            id="add-quote-success-message">
+              <div class="message-body">
+                <strong>La citation a bien été ajoutée.</strong>
+              </div>
+            </article>
+            <div class="field is-pulled-right">
+            <button id="add-btn" class="button is-success">Ajouter</button>
           </div>
         </section>
+
         <footer class="modal-card-foot" style="justify-content: flex-end">
           <button id="btn-close-add-quote2" class="button">Fermer</button>
         </footer>

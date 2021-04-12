@@ -34,8 +34,20 @@ function majTab(etatCourant) {
 }
 
 /**
+ * Effectue les actions à faire après avoir récupérer les citations
+ * 
+ */
+function updateQuotes() {
+  fetchCitations().then(data => {
+    document.getElementById("tab-body-classement").innerHTML = dataToTab(data);
+  });
+}
+
+
+/**
  * Fait une requête GET authentifiée sur /citations
  * Entre les données récupérées dans data dans etatCourant
+ * 
  * @param {Etat} etatCourant l'état courant
  */
 function fetchCitations() {
@@ -47,7 +59,11 @@ function fetchCitations() {
     .catch((erreur) => ({ err: erreur }));
 }
 
-
+/**
+ * Met en forme les citations sous forme de tableau
+ * 
+ * @param {Array} data les citations
+ */
 function dataToTab(data) {
   return data.map((data, index) => {
     return `<tr id="${data._id}"><th>${index+1}</th><td>${data.character}</td>
@@ -63,14 +79,24 @@ function dataToTab(data) {
           </b> 
           ${data.quote}</p><p><b>Personnage : </b>${data.character}</p><p><b>
           Source : </b> ${data.origin}</p></div></div></div>`;
-  }).join("\n");
+  }).join("");
 }
 
-
+/**
+ * Affiche la modale
+ * 
+ *  * @param {id} element la modale à ouvrir
+ */
 function ouvrirModale(element)
 {
     document.getElementById(element).classList.add('is-active');
 }
+
+/**
+ * Ferme la modale
+ *
+ * @param {id} element la modale à ferme
+ */
 function fermerModale(element)
 {
     document.getElementById(element).classList.remove('is-active');
@@ -110,16 +136,33 @@ function registerTabClick(etatCourant) {
  * Gestion de la boîte de dialogue (a.k.a. modal) d'ajout de citation
  * ****************************************************************** */
 
+/**
+ * Déclenche l'ouverture de la modale d'ajout de citation
+ *
+ * @param {Etat} etatCourant l'état courant
+ */
 function openAddQuote(etatCourant) {
   etatCourant.addQuoteModal = true;
   majPage(etatCourant);
 }
 
+/**
+ * Déclenche la fermeture de la modale d'ajout de citation 
+ * et vide ses champs de formulaire
+ *
+ * @param {Etat} etatCourant l'état courant
+ */
 function closeAddQuote(etatCourant) {
   etatCourant.addQuoteModal = false;
+  addQuoteFormClear();
   majPage(etatCourant);
 }
 
+/**
+ * Met à jour l'état de la modale, l'ouvre/la ferme.
+ *
+ * @param {Etat} etatCourant l'état courant
+ */
 function majAddQuoteModal(etatCourant) {
   const modalClasses = document.getElementById("addQuoteModal").classList;
   if (etatCourant.addQuoteModal) {
@@ -128,6 +171,116 @@ function majAddQuoteModal(etatCourant) {
     modalClasses.remove("is-active");
   }
 }
+
+/**
+ * Gère le formulaire d'ajout de citation. 
+ * Si les informations saisies sont correctes -> AddQuote(...)
+ * Si les informations saisies ne sont pas correctes -> erreur
+ *
+ * @param {Etat} etatCourant l'état courant
+ */
+function addQuoteForm(etatCourant) {
+  const quote = document.getElementById("add-quote-text").value;
+  const character = document.getElementById("add-character-text").value;
+  const source = document.getElementById("add-source-text").value;
+  const image = document.getElementById("add-image-link").value;
+  let direction = ""
+  if (document.getElementById("add-left-radio").checked === true) {
+    direction = "left";
+  }else if (document.getElementById("add-right-radio").checked === true) {
+    direction = "right";
+  }
+  if (quote != "" && character != "" && source != "") {
+    AddQuote(etatCourant, quote, character, source, image, direction);
+  }else {
+    addQuoteFormError(quote, character, source, image, direction);
+    document.getElementById("add-quote-success-message").classList
+        .add("is-hidden");
+  }
+}
+
+/**
+ * Ajoute la citation des champs du formulaire sur le serveur.
+ * Affiche un message de succès et met à jour les citations.
+ *
+ * @param {Etat} etatCourant l'état courant
+ * @param {String} quote la valeur du champ citation
+ * @param {String} character la valeur du champ personnage
+ * @param {String} source la valeur du champ source
+ * @param {String} image la valeur du champ image
+ * @param {String} direction la valeur de la direction
+ */
+function AddQuote(etatCourant, quote, character, source, image, direction) {
+  fetch(serverUrl + "/citations", { method: 'POST', headers: { 
+      "x-api-key":etatCourant.key, "Content-Type": "application/json" },
+      body: JSON.stringify({"quote": quote, "character": character, "image":
+      image, "characterDirection": direction, "origin": source})})
+        .then(updateQuotes);
+        addQuoteFormClear(); 
+
+      document.getElementById("add-quote-success-message").classList
+        .remove("is-hidden");
+      document.getElementById("add-quote-error-message").classList
+        .add("is-hidden");    
+}
+
+/**
+ * Gere les erreurs du formulaire. 
+ * Si tous les champs ne sont saisies correctement -> erreur et mise en valeur
+ * des champs manquant
+ *
+ * @param {String} quote la valeur du champ citation
+ * @param {String} character la valeur du champ personnage
+ * @param {String} source la valeur du champ source
+ */
+function addQuoteFormError(quote, character, source) {
+  if ( quote == "" ) document.getElementById('add-quote-text').classList
+    .add('is-danger');
+  else document.getElementById('add-quote-text').classList.remove('is-danger');
+  if ( character == "") document.getElementById('add-character-text').classList
+    .add('is-danger');
+  else document.getElementById('add-character-text').classList
+    .remove('is-danger');
+  if ( source == "" ) document.getElementById('add-source-text').classList
+    .add('is-danger');
+  else document.getElementById('add-source-text').classList
+    .remove('is-danger');
+  document.getElementById("add-quote-error-message").classList
+    .remove("is-hidden");
+}
+
+
+/**
+ * Remet les champs du formulaire vides. Enlève les messages d'erreurs
+ *
+ * @param {Etat} etatCourant l'état courant
+ */
+function addQuoteFormClear() {
+document.getElementById("add-quote-text").value = "";
+document.getElementById("add-character-text").value = "";
+document.getElementById("add-source-text").value = "";
+document.getElementById("add-image-link").value = "";
+document.getElementById("add-left-radio").checked = false;
+document.getElementById("add-right-radio").checked = false;
+document.getElementById("add-quote-success-message").classList.add("is-hidden");
+document.getElementById("add-quote-error-message").classList.add("is-hidden");
+}
+
+/**
+ * Enregistre les actions à effectuer lors d'un click sur les boutons
+ * impliqués sur l'ajout d'une citation
+ * @param {Etat} etatCourant
+ */
+ function AddQuoteModalClick(etatCourant) {
+document.getElementById("btn-add-quote").onclick = () =>
+  openAddQuote(etatCourant);
+document.getElementById("btn-close-add-quote1").onclick = () =>
+  closeAddQuote(etatCourant);
+document.getElementById("btn-close-add-quote2").onclick = () =>
+  closeAddQuote(etatCourant);
+document.getElementById("add-btn").onclick = () =>
+  addQuoteForm(etatCourant);  
+ }
 
 
 /* ******************************************************************
@@ -163,13 +316,15 @@ function lanceWhoamiEtInsereLogin(etatCourant, key) {
     return fetchWhoami(key).then((data) => {
       const ok = data.err === undefined;
       if (!ok) {
-        etatCourant.key = key;
         etatCourant.isConnected = false;
         etatCourant.errorAPI = true;
+        etatCourant.login = "";
+        etatCourant.key = 0;
       } else {
         etatCourant.isConnected = true;
         etatCourant.errorAPI = false;
         etatCourant.login = data.login;
+        etatCourant.key = key;
         clickFermeModalLogin(etatCourant);
       }
       majAPIErrorMessage(etatCourant);
@@ -273,7 +428,7 @@ function clickOuvreModalLogin(etatCourant) {
 
 /**
  * Enregistre les actions à effectuer lors d'un click sur les boutons
- * d'ouverture/fermeture de la boîte de dialogue affichant l'utilisateur.
+ * impliqués sur la connexion/deconnexion.
  * @param {Etat} etatCourant
  */
 function registerLoginModalClick(etatCourant) {
@@ -287,14 +442,7 @@ function registerLoginModalClick(etatCourant) {
     lanceWhoamiEtInsereLogin(etatCourant,
       document.getElementById("api_key").value);
   document.getElementById("btn-disconnect").onclick = () =>
-    clickDisconnect(etatCourant);
-  document.getElementById("btn-add-quote").onclick = () =>
-      openAddQuote(etatCourant);
-  document.getElementById("btn-close-add-quote1").onclick = () =>
-      closeAddQuote(etatCourant);
-    document.getElementById("btn-close-add-quote2").onclick = () =>
-      closeAddQuote(etatCourant);
-
+  clickDisconnect(etatCourant);
 }
 
 /* ******************************************************************
@@ -314,6 +462,7 @@ function majPage(etatCourant) {
   majAPIErrorMessage(etatCourant);
   registerTabClick(etatCourant);
   registerLoginModalClick(etatCourant);
+  AddQuoteModalClick(etatCourant);
   majEnterAPI(etatCourant);
   majAddQuoteModal(etatCourant);
 }
@@ -334,9 +483,7 @@ function initClientCitations() {
     key: 0,
     login: "",
   };
-  fetchCitations().then(data => {
-    document.getElementById("tab-body-classement").innerHTML = dataToTab(data);
-  });
+  updateQuotes();
   majPage(etatInitial);
 }
 
