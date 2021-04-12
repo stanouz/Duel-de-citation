@@ -298,6 +298,43 @@ function registerLoginModalClick(etatCourant) {
 }
 
 /* ******************************************************************
+ * Affichage d'un duel aléatoire
+ * 
+ * ****************************************************************** */
+
+function RandomForbiden(max, forbidenNb){
+  const nb = Math.floor(Math.random()*max);
+  if(nb==forbidenNb) return RandomForbiden(max, forbidenNb);
+
+  return nb;
+}
+
+function RandomCitation(data){
+  const random = RandomForbiden(data.length, -1);
+  return [data[random], 
+          data[RandomForbiden(data.length, random)]];
+}
+
+function DisplayCitation(citations){
+  citations.map((citation, index) => {
+  document.getElementById("quote"+(index+1)).innerHTML = citation.quote;
+    
+  document.getElementById("subtitle"+(index+1)).innerHTML = 
+    citation.character + " dans "+citation.origin;
+
+  document.getElementById("img"+(index+1)).src = citation.image;
+      
+  if(index==0 && citation.characterDirection=="Right"){
+    document.getElementById("img1").style = "transform: scaleX(-1);";
+  }
+  if(index==1 && citation.characterDirection=="Left"){
+    document.getElementById("img2").style = "transform: scaleX(-1);";
+  }
+    
+  });
+}
+
+/* ******************************************************************
  * Initialisation de la page et fonction de mise à jour
  * globale de la page.
  * ****************************************************************** */
@@ -337,6 +374,10 @@ function initClientCitations() {
   fetchCitations().then(data => {
     document.getElementById("tab-body-classement").innerHTML = dataToTab(data);
   });
+  
+  fetchCitations().then(data => RandomCitation(data))
+    .then(citation => DisplayCitation(citation));
+
   majPage(etatInitial);
 }
 
