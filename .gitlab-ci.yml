@@ -1,5 +1,3 @@
-image: alpine
-  
 pages:
   script:
   - mv src/client/ public/
