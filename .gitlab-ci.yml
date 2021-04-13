@@ -2,7 +2,7 @@ image: alpine
   
 pages:
   script:
-  - mv src/ public/
+  - mv src/client/ public/
   artifacts:
     paths:
     - public
