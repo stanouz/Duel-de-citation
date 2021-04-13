@@ -33,17 +33,25 @@ function majTab(etatCourant) {
   }
 }
 
+
+/* ******************************************************************
+ * Récupérer les données des citations sur le serveur
+ ******************************************************************** */
+
+
 /**
- * Effectue les actions à faire après avoir récupérer les citations
+ * Effectue les actions à réaliser après avoir récupérer les citations
  * 
  */
-function updateQuotes() {
+function updateQuotes(etatCourant) {
   fetchCitations().then(data => {
     document.getElementById("tab-body-classement").innerHTML = dataToTab(data);
   });
   fetchCitations().then(data => RandomQuotes(data))
-  .then(citation => DisplayQuote(citation));
+  .then(citation => DisplayQuote(citation, etatCourant));
 }
+
+
 
 
 /**
@@ -61,6 +69,10 @@ function fetchCitations() {
     .catch((erreur) => ({ err: erreur }));
 }
 
+/* ******************************************************************
+ * Gestion du tab "Toutes les citations"  
+ ******************************************************************** */
+
 /**
  * Met en forme les citations sous forme de tableau
  * 
@@ -70,24 +82,49 @@ function dataToTab(data) {
   return data.map((data, index) => {
     return `<tr id="${data._id}"><th>${index+1}</th><td>${data.character}</td>
   <td>${data.quote}</td><td><button class="fas fa-info-circle" onclick=
-  "ouvrirModale('info${data._id}')"></button></td></tr>
-  <div id="info${data._id}" class="modal"><div class="modal-background"
-   onclick="fermerModale('info${data._id}');"></div>
+  "ouvrirModale('modale${data._id}')"></button></td></tr>
+  <div id="modale${data._id}" class="modal"><div class="modal-background"
+   onclick="fermerModale('modale${data._id}');"></div>
           <div class="modal-content box">
           <button class="modal-close is-large" aria-label="close" 
-          onclick="fermerModale('info${data._id}');"></button>
-          <div style="float:left;"><img class="mx-2" src="${data.image}" 
-          width="100px"></div><div style="line-height:50px;"><p><b>Citation : 
+          onclick="fermerModale('modale${data._id}');"></button>
+          <div><p class="my-2"><b>Citation : 
           </b> 
-          ${data.quote}</p><p><b>Personnage : </b>${data.character}</p><p><b>
-          Source : </b> ${data.origin}</p></div></div></div>`;
+          ${data.quote}</p><p class="my-2"><b>Personnage : </b>${data.character}</p>
+          <p class="my-2"><b>Source : </b> ${data.origin}</p></div>
+          <div> <p class="my-2"><b>Image : </b></p>
+          <img class="mx-2" src="${data.image}" width="150px"></div>
+          <p class="my-2"><b>Direction : </b> ${getDirection(data.characterDirection)}</p>
+          <p class="my-2"><b>Ajouté par : </b> ${data.addedBy}</p>
+          </div></div>
+          `;
   }).join("");
 }
 
+
+
+
 /**
- * Affiche la modale
+ * Rend la direction du joueur en français
  * 
- *  * @param {id} element la modale à ouvrir
+ *  @param {Direction} dir la direction du joueur en anglais
+ *  @returns la direction du joueur en français
+ */
+function getDirection(dir) {
+  switch (dir) {
+    case "Right":
+      return "Droite";
+    case "Left":
+      return "Gauche";
+    default:
+      return "Inconnue";
+  }
+}
+
+/**
+ * Affiche la modale de détails de la citation
+ * 
+ *  * @param {Id} element la modale à ouvrir
  */
 function ouvrirModale(element)
 {
@@ -95,9 +132,9 @@ function ouvrirModale(element)
 }
 
 /**
- * Ferme la modale
+ * Ferme la modale de détails de la citation
  *
- * @param {id} element la modale à ferme
+ * @param {Id} element la modale à ferme
  */
 function fermerModale(element)
 {
@@ -188,9 +225,9 @@ function addQuoteForm(etatCourant) {
   const image = document.getElementById("add-image-link").value;
   let direction = ""
   if (document.getElementById("add-left-radio").checked === true) {
-    direction = "left";
+    direction = "Left";
   }else if (document.getElementById("add-right-radio").checked === true) {
-    direction = "right";
+    direction = "Right";
   }
   if (quote != "" && character != "" && source != "") {
     AddQuote(etatCourant, quote, character, source, image, direction);
@@ -217,7 +254,7 @@ function AddQuote(etatCourant, quote, character, source, image, direction) {
       "x-api-key":etatCourant.key, "Content-Type": "application/json" },
       body: JSON.stringify({"quote": quote, "character": character, "image":
       image, "characterDirection": direction, "origin": source})})
-        .then(updateQuotes);
+        .then(updateQuotes(etatCourant));
         addQuoteFormClear(); 
 
       document.getElementById("add-quote-success-message").classList
@@ -324,6 +361,7 @@ function lanceWhoamiEtInsereLogin(etatCourant, key) {
         etatCourant.key = 0;
       } else {
         etatCourant.isConnected = true;
+        document.getElementById("vote-error-message").classList.add("is-hidden");
         etatCourant.errorAPI = false;
         etatCourant.login = data.login;
         etatCourant.key = key;
@@ -484,7 +522,12 @@ function RandomQuotes(data){
  *
  * @param {Array} citations tableau de 2 objets citations
  */
-function DisplayQuote(citations){
+function DisplayQuote(citations, etatCourant){
+    document.getElementById("left-vote-btn").onclick = () =>
+  vote(citations[0]._id, citations[1]._id, etatCourant);
+  document.getElementById("right-vote-btn").onclick = () =>
+  vote(citations[1]._id, citations[0]._id, etatCourant);
+
   citations.map((citation, index) => {
   document.getElementById("quote"+(index+1)).innerHTML = citation.quote;
   document.getElementById("subtitle"+(index+1)).innerHTML = 
@@ -499,6 +542,22 @@ function DisplayQuote(citations){
   }
     
   });
+}
+
+function vote(winner, looser, etatCourant) {
+  console.log("CALL voter");
+
+  if (etatCourant.isConnected) {
+    fetch(serverUrl + "/citations/duels", {
+      method: 'POST',
+      headers: { "x-api-key": etatCourant.key, "Content-Type": "application/json" },
+      body: JSON.stringify({"winner": winner, "looser": looser})
+    });
+    updateQuotes(etatCourant);
+  }else{
+    document.getElementById("vote-error-message").classList.remove("is-hidden");
+  }
+
 }
 
 /* ******************************************************************
@@ -539,7 +598,7 @@ function initClientCitations() {
     key: 0,
     login: "",
   };
-  updateQuotes();
+  updateQuotes(etatInitial);
   majPage(etatInitial);
 }
 

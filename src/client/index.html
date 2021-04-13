@@ -49,9 +49,16 @@
       </div>
 
       <!-- Setion Duel -->
-      <div class="columns" id="div-duel">
-        <div class="column">
 
+      <article class="message is-danger is-hidden" 
+      id="vote-error-message">
+        <div class="message-body">
+          <strong>Vous devez vous connecter pour voter.</strong>
+        </div>
+      </article>
+      <div class="columns" id="div-duel">.
+        
+        <div class="column">
           <!-- CARD 1-->
           <div class="card">
             <div class="columns card-content">
@@ -72,7 +79,7 @@
             </div>
             <div class="card-content">
               <div class="columns is-centered">
-                <p class="button is-danger">
+                <p class="button is-danger" id="left-vote-btn">
                   Voter pour la citation de gauche !
                 </p>
               </div>
@@ -101,7 +108,7 @@
             </div>
             <div class="card-content">
               <div class="columns is-centered">
-                <p class="button is-info">
+                <p class="button is-info" id="right-vote-btn">
                   Voter pour la citation de droite !</p>
               </div>
             </div>
