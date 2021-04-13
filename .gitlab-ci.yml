@@ -1,5 +1,7 @@
 pages:
   script:
+  - rm -rf public
+  - mkdir public
   - mv src/client/ public/
   artifacts:
     paths:
