@@ -1,8 +1,6 @@
 image: alpine
   
 pages:
-  script:
-  - mv /. public/
   artifacts:
     paths:
     - public
