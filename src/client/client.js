@@ -42,6 +42,7 @@ function majTab(etatCourant) {
 /**
  * Effectue les actions à réaliser après avoir récupérer les citations
  * 
+ *  * @param {Etat} etatCourant l'état courant
  */
 function updateQuotes(etatCourant) {
   fetchCitations().then(data => {
@@ -57,8 +58,7 @@ function updateQuotes(etatCourant) {
 /**
  * Fait une requête GET authentifiée sur /citations
  * Entre les données récupérées dans data dans etatCourant
- * 
- * @param {Etat} etatCourant l'état courant
+ * @returns les données des citations en Json
  */
 function fetchCitations() {
   return fetch(serverUrl + "/citations")
@@ -77,6 +77,7 @@ function fetchCitations() {
  * Met en forme les citations sous forme de tableau
  * 
  * @param {Array} data les citations
+ * @returns les citations sous forme de cellules de tableau
  */
 function dataToTab(data) {
   return data.map((data, index) => {
@@ -292,7 +293,6 @@ function addQuoteFormError(quote, character, source) {
 /**
  * Remet les champs du formulaire vides. Enlève les messages d'erreurs
  *
- * @param {Etat} etatCourant l'état courant
  */
 function addQuoteFormClear() {
 document.getElementById("add-quote-text").value = "";
@@ -308,6 +308,7 @@ document.getElementById("add-quote-error-message").classList.add("is-hidden");
 /**
  * Enregistre les actions à effectuer lors d'un click sur les boutons
  * impliqués sur l'ajout d'une citation
+ * 
  * @param {Etat} etatCourant
  */
  function AddQuoteModalClick(etatCourant) {
@@ -329,6 +330,7 @@ document.getElementById("add-btn").onclick = () =>
 
 /**
  * Fait une requête GET authentifiée sur /whoami
+ * 
  * @param {Clé} key La clé API entrée par l'utilisateur
  * @returns une promesse du login utilisateur ou du message d'erreur
  */
@@ -347,6 +349,8 @@ function fetchWhoami(key) {
 /**
  * Fait une requête sur le serveur et insère le login dans
  * la modale d'affichage de l'utilisateur.
+ * 
+ * @param {Etat} etatCourant l'état courant
  * @param {Clé} key La clé API entrée par l'utilisateur
  * @returns Une promesse de mise à jour
  */
@@ -496,6 +500,7 @@ function registerLoginModalClick(etatCourant) {
  *
  * @param {Entier} max le nombre max
  * @param {Entier} forbidenNb le nombre interdit
+ * @returns le nombre aléatoire 
  */
 function RandomForbiden(max, forbidenNb){
   const nb = Math.floor(Math.random()*max);
@@ -509,6 +514,7 @@ function RandomForbiden(max, forbidenNb){
  * toutes les citations
  *
  * @param {Array} data tableau d'objet contenant les sitations
+ * @returns un tableau contenant les deux citations aléatoires
  */
 function RandomQuotes(data){
   const random = RandomForbiden(data.length, -1);
@@ -544,6 +550,14 @@ function DisplayQuote(citations, etatCourant){
   });
 }
 
+
+/**
+ * Vote pour une des deux citations affichées 
+ *
+ * @param {CitationId} winner id de la citation ayant gagné
+ * @param {CitationId} looser id de la citation ayant perdu
+ * @param {Etat} etatCourant l'état courant
+ */
 function vote(winner, looser, etatCourant) {
   console.log("CALL voter");
 
