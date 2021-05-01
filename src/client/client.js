@@ -295,32 +295,32 @@ function addQuoteFormError(quote, character, source) {
  *
  */
 function addQuoteFormClear() {
-document.getElementById("add-quote-text").value = "";
-document.getElementById("add-character-text").value = "";
-document.getElementById("add-source-text").value = "";
-document.getElementById("add-image-link").value = "";
-document.getElementById("add-left-radio").checked = false;
-document.getElementById("add-right-radio").checked = false;
-document.getElementById("add-quote-success-message").classList.add("is-hidden");
-document.getElementById("add-quote-error-message").classList.add("is-hidden");
+  document.getElementById("add-quote-text").value = "";
+  document.getElementById("add-character-text").value = "";
+  document.getElementById("add-source-text").value = "";
+  document.getElementById("add-image-link").value = "";
+  document.getElementById("add-left-radio").checked = false;
+  document.getElementById("add-right-radio").checked = false;
+  document.getElementById("add-quote-success-message").classList.add("is-hidden");
+  document.getElementById("add-quote-error-message").classList.add("is-hidden");
 }
 
 /**
- * Enregistre les actions à effectuer lors d'un click sur les boutons
- * impliqués sur l'ajout d'une citation
- * 
- * @param {Etat} etatCourant
- */
- function AddQuoteModalClick(etatCourant) {
-document.getElementById("btn-add-quote").onclick = () =>
-  openAddQuote(etatCourant);
-document.getElementById("btn-close-add-quote1").onclick = () =>
-  closeAddQuote(etatCourant);
-document.getElementById("btn-close-add-quote2").onclick = () =>
-  closeAddQuote(etatCourant);
-document.getElementById("add-btn").onclick = () =>
-  addQuoteForm(etatCourant);  
- }
+* Enregistre les actions à effectuer lors d'un click sur les boutons
+* impliqués sur l'ajout d'une citation
+* 
+* @param {Etat} etatCourant
+*/
+function AddQuoteModalClick(etatCourant) {
+  document.getElementById("btn-add-quote").onclick = () =>
+    openAddQuote(etatCourant);
+  document.getElementById("btn-close-add-quote1").onclick = () =>
+    closeAddQuote(etatCourant);
+  document.getElementById("btn-close-add-quote2").onclick = () =>
+    closeAddQuote(etatCourant);
+  document.getElementById("add-btn").onclick = () =>
+    addQuoteForm(etatCourant);  
+}
 
 
 /* ******************************************************************
@@ -329,11 +329,11 @@ document.getElementById("add-btn").onclick = () =>
  * ****************************************************************** */
 
 /**
- * Fait une requête GET authentifiée sur /whoami
- * 
- * @param {Clé} key La clé API entrée par l'utilisateur
- * @returns une promesse du login utilisateur ou du message d'erreur
- */
+* Fait une requête GET authentifiée sur /whoami
+* 
+* @param {Clé} key La clé API entrée par l'utilisateur
+* @returns une promesse du login utilisateur ou du message d'erreur
+*/
 function fetchWhoami(key) {
   return fetch(serverUrl + "/whoami", { headers: { "x-api-key": key } })
     .then((response) => response.json())
@@ -622,3 +622,4 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("Exécution du code après chargement de la page");
   initClientCitations();
 });
+
