@@ -81,54 +81,7 @@ document.addEventListener('DOMContentLoaded', function(){
     );
 
 
-    suite("Test de TadaToTab(data) :",
-        function(){
-            test("Tableau correctement créé",
-                function(){
-                    const tableau = dataToTab(donnees_exemple);
-                    /*
-                    chai.assert.deepEqual(tableau,
-                        `<tr id="${donnees_exemple[0].__id}"><th>${1}</th><td>${donnees_exemple[0].character}</td>
-                        <td>${donnees_exemple[0].quote}</td><td><button class="fas fa-info-circle" onclick=
-                        "ouvrirModale('modale${donnees_exemple[0]._id}')"></button></td></tr>
-                        <div id="modale${donnees_exemple[0]._id}" class="modal"><div class="modal-background"
-                        onclick="fermerModale('modale${donnees_exemple[0]._id}');"></div>
-                        <div class="modal-content box">
-                        <button class="modal-close is-large" aria-label="close" 
-                        onclick="fermerModale('modale${donnees_exemple[0]._id}');"></button>
-                        <div><p class="my-2"><b>Citation : 
-                        </b> 
-                        ${donnees_exemple[0].quote}</p><p class="my-2"><b>Personnage : </b>${donnees_exemple[0].character}</p>
-                        <p class="my-2"><b>Source : </b> ${donnees_exemple[0].origin}</p></div>
-                        <div> <p class="my-2"><b>Image : </b></p>
-                        <img class="mx-2" src="${donnees_exemple[0].image}" width="150px"></div>
-                        <p class="my-2"><b>Direction : </b> ${getDirection(donnees_exemple[0].characterDirection)}</p>
-                        <p class="my-2"><b>Ajouté par : </b> ${donnees_exemple[0].addedBy}</p>
-                        </div></div><tr id="${donnees_exemple[1].__id}"><th>${2}</th><td>${donnees_exemple[1].character}</td>
-                        <td>${donnees_exemple[1].quote}</td><td><button class="fas fa-info-circle" onclick=
-                        "ouvrirModale('modale${donnees_exemple[1]._id}')"></button></td></tr>
-                        <div id="modale${donnees_exemple[1]._id}" class="modal"><div class="modal-background"
-                        onclick="fermerModale('modale${donnees_exemple[1]._id}');"></div>
-                        <div class="modal-content box">
-                        <button class="modal-close is-large" aria-label="close" 
-                        onclick="fermerModale('modale${donnees_exemple[1]._id}');"></button>
-                        <div><p class="my-2"><b>Citation : 
-                        </b> 
-                        ${donnees_exemple[1].quote}</p><p class="my-2"><b>Personnage : </b>${donnees_exemple[1].character}</p>
-                        <p class="my-2"><b>Source : </b> ${donnees_exemple[1].origin}</p></div>
-                        <div> <p class="my-2"><b>Image : </b></p>
-                        <img class="mx-2" src="${donnees_exemple[1].image}" width="150px"></div>
-                        <p class="my-2"><b>Direction : </b> ${getDirection(donnees_exemple[1].characterDirection)}</p>
-                        <p class="my-2"><b>Ajouté par : </b> ${donnees_exemple[1].addedBy}</p>
-                        </div></div>`
-                        
-                    );
-                    */
-                }
-            );
-        }
-    );
-  
+    
     mocha.checkLeaks();
     mocha.globals(['jQuery']);
     mocha.run();

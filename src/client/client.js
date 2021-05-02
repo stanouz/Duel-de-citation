@@ -91,11 +91,13 @@ function dataToTab(data) {
           onclick="fermerModale('modale${data._id}');"></button>
           <div><p class="my-2"><b>Citation : 
           </b> 
-          ${data.quote}</p><p class="my-2"><b>Personnage : </b>${data.character}</p>
+          ${data.quote}</p><p class="my-2"><b>Personnage : 
+          </b>${data.character}</p>
           <p class="my-2"><b>Source : </b> ${data.origin}</p></div>
           <div> <p class="my-2"><b>Image : </b></p>
           <img class="mx-2" src="${data.image}" width="150px"></div>
-          <p class="my-2"><b>Direction : </b> ${getDirection(data.characterDirection)}</p>
+          <p class="my-2"><b>Direction : </b> 
+          ${getDirection(data.characterDirection)}</p>
           <p class="my-2"><b>Ajouté par : </b> ${data.addedBy}</p>
           </div></div>
           `;
@@ -301,8 +303,10 @@ function addQuoteFormClear() {
   document.getElementById("add-image-link").value = "";
   document.getElementById("add-left-radio").checked = false;
   document.getElementById("add-right-radio").checked = false;
-  document.getElementById("add-quote-success-message").classList.add("is-hidden");
-  document.getElementById("add-quote-error-message").classList.add("is-hidden");
+  document.getElementById("add-quote-success-message").
+      classList.add("is-hidden");
+  document.getElementById("add-quote-error-message").
+      classList.add("is-hidden");
 }
 
 /**
@@ -365,7 +369,8 @@ function lanceWhoamiEtInsereLogin(etatCourant, key) {
         etatCourant.key = 0;
       } else {
         etatCourant.isConnected = true;
-        document.getElementById("vote-error-message").classList.add("is-hidden");
+        document.getElementById("vote-error-message").
+            classList.add("is-hidden");
         etatCourant.errorAPI = false;
         etatCourant.login = data.login;
         etatCourant.key = key;
@@ -545,8 +550,7 @@ function DisplayQuote(citations, etatCourant){
   }
   if(index==1 && citation.characterDirection=="Left"){
     document.getElementById("img2").style = "transform: scaleX(-1);";
-  }
-    
+  } 
   });
 }
 
@@ -564,12 +568,14 @@ function vote(winner, looser, etatCourant) {
   if (etatCourant.isConnected) {
     fetch(serverUrl + "/citations/duels", {
       method: 'POST',
-      headers: { "x-api-key": etatCourant.key, "Content-Type": "application/json" },
+      headers: { "x-api-key": etatCourant.key, 
+                 "Content-Type": "application/json" },
       body: JSON.stringify({"winner": winner, "looser": looser})
     });
     updateQuotes(etatCourant);
   }else{
-    document.getElementById("vote-error-message").classList.remove("is-hidden");
+    document.getElementById("vote-error-message").
+        classList.remove("is-hidden");
   }
 
 }
