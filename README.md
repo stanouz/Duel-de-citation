@@ -1,6 +1,6 @@
 # LIFAP5-projet
 
-The result is not anymore fully available because teachers database is no longer available.
+The result is not anymore fully available because teacher's database is no longer available.
 
 [Project result page](http://safa.pages.univ-lyon1.fr/lifap5-projet/index.html)
 
